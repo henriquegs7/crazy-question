@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crazy Question</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <img id="image-show" src="/meme.jpg">
+        <div class="box">
+            <p id="question-show">OQ vou perguntar hoje?!</p>
+            <div class="button-container">
+                <button id="yes"> SIM </button>
+                <button id="no"> não </button>
+            </div>
+        </div>
+    </div>
+    <button id="change-question" class="change-question" title="change question">CQ</button>
+    <form id="container-question">
+        <fieldset>
+            <legend> Qual vai ser a <s>sacan..</s> digo.. <b>pergunta*</b>? </legend>
+            <p class="container-form">
+                <label for="title" class="label-form">Titulo:</label>
+                <input id="title" class="input-form" type="text" name="title" oninvalid="this.setCustomValidity('Insira um titulo')" oninput="setCustomValidity('')" required/>
+            </p>
+            <p class="container-form">
+                <label for="question" class="label-form">Pergunta:</label>
+                <input id="question" class="input-form" type="text" name="question" oninvalid="this.setCustomValidity('Insira uma pergunta')" oninput="setCustomValidity('')" required/>
+            </p>
+            <p class="container-form">
+                <label for="image" class="label-form">Imagem:</label>
+                <input id="image" class="input-form" type="file" name="image" oninvalid="this.setCustomValidity('Insira uma imagem')" oninput="setCustomValidity('')" required/>
+            </p>
+            <button id="send" class="send">perguntar</button>
+        </fieldset>
+    </form>
+</body>
+<script>
+    const buttonNO = document.getElementById('no');
+    const buttonYES = document.getElementById('yes');
+    const imagem = document.getElementById('image-show');
+    const height = window.innerHeight - 50;
+    const width = window.innerWidth - 50;
+    
+    buttonNO.addEventListener("mouseover", () => {
+        buttonNO.style.position = "absolute";
+        buttonNO.style.top = Math.random() * height + "px";
+        buttonNO.style.left = Math.random() * width + "px";
+    })
+
+    buttonYES.addEventListener("click", () => {
+        imagem.style.animation = "slideinON 2s both"
+       
+        const duration = 30 * 1000;
+        const end = Date.now() + duration;
+ 
+        (function frame() {
+            // launch a few confetti from the left edge
+            confetti({
+                particleCount: 7,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+            });
+            // and launch a few from the right edge
+            confetti({
+                particleCount: 7,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+            });
+            
+            // keep going until we are out of time
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            } else {
+                imagem.style.animation = "slideinOFF 2s both"
+            }
+        }());
+    })
+</script>
+
+<script>
+    const changeQuestion = document.getElementById('change-question');
+    const containerQuestion = document.getElementById('container-question');
+
+    changeQuestion.addEventListener("click", () => {
+        if (containerQuestion.style.animationName === "containerInON") {
+            containerQuestion.style.animation = "containerInOFF 2s both"
+        } else {
+            containerQuestion.style.animation = "containerInON 2s both"
+        }
+    })
+</script>
+
+<script>
+    const form = document.querySelector('form');
+    const titleInput = document.getElementById('title');
+    const questionInput = document.getElementById('question');
+    const imageInput = document.getElementById('image');
+    
+    const newQuestion = document.getElementById('question-show');
+    const newImage = document.getElementById('image-show');
+    
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const image = imageInput.files[0];
+        const contentType = image.type;
+        const validContentTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+        document.title = titleInput.value;
+        newQuestion.innerHTML = questionInput.value;
+
+        if (!validContentTypes.includes(contentType)) {
+            alert('O arquivo enviado não é uma imagem válida.');
+        } else {
+            newImage.src = URL.createObjectURL(image);
+        }
+
+        containerQuestion.style.animation = "containerInOFF 2s both"
+    });
+</script>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        background: #191919f8;
+        position: relative;
+        color: white;
+        overflow: hidden;
+    }
+
+    a {
+        text-decoration: none;
+        background: white;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .box {
+        font-size: 30px;
+        color: white;
+        height: 250px;
+        width: 350px;
+        border-radius: 10px;
+        background: #191919;
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    img { 
+        position: absolute;
+        opacity: 0;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-around;
+        height: 50px;
+        width: 150px;
+    }
+
+    #yes, #no, #send {
+        min-height: 30px;
+        min-width: 100px;
+        padding: 5px 10px;
+        background: white;
+        border-radius: 5px;
+        color: black;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        margin: 5px;
+    }
+
+    #no {
+        background-color: #f24b2d;
+        color: white;
+        font-size: 16px;
+    }
+
+    a, #yes:hover {
+        background: greenyellow;
+        transition: all .3s;
+        color: white;
+        font-size: 20px;
+    }
+    
+    @keyframes slideinON {
+        0% {
+            z-index: 10;  
+            opacity: 0;        
+        }
+        100% {
+            z-index: 10;  
+            opacity: 1;  
+        }
+    }
+
+    @keyframes slideinOFF {
+        0% {
+            z-index: 10;  
+            opacity: 1;              
+        }
+        100% {
+            z-index: 10;  
+            opacity: 0;  
+        }
+    }
+
+    #container-question {
+        opacity: 1;
+    }
+
+    @keyframes containerInON {
+        0% {
+            opacity: 0;        
+        }
+        100% {
+            opacity: 1;  
+        }
+    }
+    
+    @keyframes containerInOFF {
+        0% {
+            opacity: 1;              
+        }
+        100% {
+            opacity: 0;  
+        }
+    }
+
+    .change-question {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: white;
+        border-radius: 5px;
+        color: black;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        margin: 5px;
+    }
+
+    .container-form {
+        display: flex;
+    }
+
+    .label-form {
+        flex: 3;
+    }
+
+    .input-form {
+        flex: 9;
+    }
+
+    .send {
+        width: 100%;
+    }
+</style>
+</html>
