@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crazy Question</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -23,7 +26,7 @@
             <legend> Qual vai ser a <s>sacan..</s> digo.. <b>pergunta*</b>? </legend>
             <p class="container-form">
                 <label for="title" class="label-form">Titulo:</label>
-                <input id="title" class="input-form" type="text" name="title" oninvalid="this.setCustomValidity('Insira um titulo')" oninput="setCustomValidity('')" required/>
+                <input id="title" class="input-form" type="text" name="title" oninvalid="this.setCustomValidity('Insira um titulo')" oninput="setCustomValidity('')" required autofocus/>
             </p>
             <p class="container-form">
                 <label for="question" class="label-form">Pergunta:</label>
@@ -37,6 +40,20 @@
         </fieldset>
     </form>
 </body>
+
+<script>
+    const changeQuestion = document.getElementById('change-question');
+    const containerQuestion = document.getElementById('container-question');
+
+    changeQuestion.addEventListener("click", () => {
+        if (containerQuestion.style.animationName === "containerInON") {
+            containerQuestion.style.animation = "containerInOFF 2s both"
+        } else {
+            containerQuestion.style.animation = "containerInON 2s both"
+        }
+    })
+</script>
+
 <script>
     const buttonNO = document.getElementById('no');
     const buttonYES = document.getElementById('yes');
@@ -51,6 +68,7 @@
     })
 
     buttonYES.addEventListener("click", () => {
+        imagem.style.display = "block"
         imagem.style.animation = "slideinON 2s both"
        
         const duration = 30 * 1000;
@@ -79,19 +97,6 @@
                 imagem.style.animation = "slideinOFF 2s both"
             }
         }());
-    })
-</script>
-
-<script>
-    const changeQuestion = document.getElementById('change-question');
-    const containerQuestion = document.getElementById('container-question');
-
-    changeQuestion.addEventListener("click", () => {
-        if (containerQuestion.style.animationName === "containerInON") {
-            containerQuestion.style.animation = "containerInOFF 2s both"
-        } else {
-            containerQuestion.style.animation = "containerInON 2s both"
-        }
     })
 </script>
 
@@ -137,6 +142,7 @@
         position: relative;
         color: white;
         overflow: hidden;
+        font-family: 'Poppins', sans-serif;
     }
 
     a {
@@ -164,9 +170,13 @@
         z-index: 1;
     }
 
+    #question-show{
+        text-align: center;
+    }
+
     img { 
         position: absolute;
-        opacity: 0;
+        display: none;
     }
 
     .button-container {
@@ -220,7 +230,8 @@
         }
         100% {
             z-index: 10;  
-            opacity: 0;  
+            opacity: 0;
+            display: none;
         }
     }
 
