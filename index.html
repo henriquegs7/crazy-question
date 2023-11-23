@@ -55,9 +55,9 @@
 
     changeQuestion.addEventListener("click", () => {
         if (containerQuestion.style.animationName === "containerInON") {
-            containerQuestion.style.animation = "containerInOFF 2s both"
+            containerQuestion.style.animation = "containerInOFF 2s both";
         } else {
-            containerQuestion.style.animation = "containerInON 2s both"
+            containerQuestion.style.animation = "containerInON 2s both";
         }
     })
 </script>
@@ -78,14 +78,15 @@
     buttonYES.addEventListener("click", () => {
         const checkboxYes = document.getElementById("checkbox-yes").checked;
         const checkboxNo = document.getElementById("checkbox-no").checked;
-        const duration = 25 * 1000;
+        const duration = 8 * 1000;
         const end = Date.now() + duration;
         
-        imagem.style.display = "block"
-        imagem.style.animation = "slideinON 2s both"
+        imagem.style.display = "block";
+        imagem.style.animation = "slideinON 2s both";
+        containerQuestion.style.animation = "containerInOFF 2s both";
  
-        if (checkboxYes) {
-            (function frame() {
+        (function frame() {
+            if (checkboxYes) {
                 // launch a few confetti from the left edge
                 confetti({
                     particleCount: 7,
@@ -101,19 +102,15 @@
                     spread: 55,
                     origin: { x: 1 }
                 });
-                
-                // keep going until we are out of time
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                } else {
-                    imagem.style.animation = "slideinOFF 2s both"
-                }
-            }());
-        } else {
-            if (Date.now() >= end) {
-                imagem.style.animation = "slideinOFF 2s both"
             }
-        }
+                
+            // keep going until we are out of time
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            } else {
+                imagem.style.animation = "slideinOFF 2s both";
+            }
+        }());
     })
 </script>
 
@@ -144,7 +141,7 @@
             }
         }
         
-        containerQuestion.style.animation = "containerInOFF 2s both"
+        containerQuestion.style.animation = "containerInOFF 2s both";
     });
 </script>
 
@@ -198,6 +195,7 @@
         position: absolute;
         display: none;
         width: 90%;
+        max-width: 700px;
     }
 
     .button-container {
