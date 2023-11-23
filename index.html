@@ -14,7 +14,7 @@
     <div class="container">
         <img id="image-show" src="/meme.jpg">
         <div class="box">
-            <p id="question-show">¿Será q consigo?</p>
+            <p id="question-show"></p>
             <div class="button-container">
                 <button id="yes"> SIM </button>
                 <button id="no"> não </button>
@@ -25,19 +25,19 @@
     <form id="container-question">
         <fieldset>
             <legend> Qual vai ser a <s>sacan..</s> digo.. <b>pergunta*</b>? </legend>
-            <!-- <p class="container-form">
+            <p class="container-form" style="display: none">
                 <label for="title" class="label-form">Titulo:</label>
                 <input id="title" class="input-form" type="text" name="title"/>
-            </p> -->
+            </p>
             <p class="container-form">
                 <label for="question" class="label-form">Pergunta:</label>
                 <input id="question" class="input-form" type="text" name="question" oninvalid="this.setCustomValidity('Faça uma pergunta')" oninput="setCustomValidity('')" required autofocus/>
             </p>
             <p class="container-form">
                 <label >Confetes:</label>
-                <input id="checkbox-yes" type="radio" name="check"  checked required/> 
+                <input id="checkbox-yes" type="radio" name="check"/> 
                 <label for="checkbox-yes" style="flex: 1;">SIM</label>
-                <input id="checkbox-no" type="radio" name="check"  required/> 
+                <input id="checkbox-no" type="radio" name="check"/> 
                 <label for="checkbox-no" style="flex: 3;">NÃO</label>
             </p>
             <p class="container-form">
@@ -50,8 +50,48 @@
 </body>
 
 <script>
-    const changeQuestion = document.getElementById('change-question');
-    const containerQuestion = document.getElementById('container-question');
+    const $ = document
+    const changeQuestion = $.getElementById('change-question');
+    const containerQuestion = $.getElementById('container-question');
+   
+    const buttonNO = $.getElementById('no');
+    const buttonYES = $.getElementById('yes');
+    const imagem = $.getElementById('image-show');
+    const height = window.innerHeight - 50;
+    const width = window.innerWidth - 50;
+
+    const form = $.querySelector('form');
+    const titleInput = $.getElementById('title');
+    const questionInput = $.getElementById('question');
+    const imageInput = $.getElementById('image');
+    
+    const newQuestion = $.getElementById('question-show');
+    const newImage = $.getElementById('image-show');
+
+    function loadDados() {
+        const params = new URLSearchParams(location.search);
+        let isConfeteYes = $.getElementById("checkbox-yes");
+        let isConfeteNo = $.getElementById("checkbox-no");
+
+        if (location.pathname === "/") {
+            containerQuestion.style.animation = "containerInON 2s both";
+        } else {
+            containerQuestion.style.animation = "containerInOFF 0s both";
+        }
+
+        newQuestion.innerHTML = params.get("question") ? params.get("question") : "¿Será q consigo?";
+        isConfeteYes.checked = params.get("isConfete") === "true" ? true : false;
+        isConfeteNo.checked = params.get("isConfete") === "true" ? false : true;
+        newImage.src = params.get("image") ?  params.get("image") : "/meme.jpg";
+    }
+
+    loadDados()
+    
+    function sendDados(question, image="/meme.jpg") {
+        const isConfete = $.getElementById("checkbox-yes").checked;
+
+        location.href = `${location.origin + location.pathname}?question=${question}&isConfete=${isConfete}&image=${image}`;
+    }
 
     changeQuestion.addEventListener("click", () => {
         if (containerQuestion.style.animationName === "containerInON") {
@@ -60,14 +100,6 @@
             containerQuestion.style.animation = "containerInON 2s both";
         }
     })
-</script>
-
-<script>
-    const buttonNO = document.getElementById('no');
-    const buttonYES = document.getElementById('yes');
-    const imagem = document.getElementById('image-show');
-    const height = window.innerHeight - 50;
-    const width = window.innerWidth - 50;
     
     buttonNO.addEventListener("mouseover", () => {
         buttonNO.style.position = "absolute";
@@ -76,10 +108,9 @@
     })
 
     buttonYES.addEventListener("click", () => {
-        const checkboxYes = document.getElementById("checkbox-yes").checked;
-        const checkboxNo = document.getElementById("checkbox-no").checked;
         const duration = 8 * 1000;
         const end = Date.now() + duration;
+        const checkboxYes = $.getElementById("checkbox-yes").checked;
         
         imagem.style.display = "block";
         imagem.style.animation = "slideinON 2s both";
@@ -112,22 +143,12 @@
             }
         }());
     })
-</script>
-
-<script>
-    const form = document.querySelector('form');
-    // const titleInput = document.getElementById('title');
-    const questionInput = document.getElementById('question');
-    const imageInput = document.getElementById('image');
-    
-    const newQuestion = document.getElementById('question-show');
-    const newImage = document.getElementById('image-show');
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const image = imageInput.files[0];
-        
-        // document.title = titleInput.value;
+
+        // $.title = titleInput.value;
         newQuestion.innerHTML = questionInput.value;
 
         if (!!image) {
@@ -137,10 +158,21 @@
             if (!validContentTypes.includes(contentType)) {
                 alert('O arquivo enviado não é uma imagem válida.');
             } else {
+                // const imageReader = new FileReader();
+                // imageReader.onloadend = () => {
+                //     const base64Image = imageReader.result;
+                //     // Use the base64Image variable as needed
+                //     console.log(base64Image);
+                //     sendDados(questionInput.value, base64Image)
+                // };
+                // imageReader.readAsDataURL(image);
                 newImage.src = URL.createObjectURL(image);
+                // sendDados(questionInput.value, URL.createObjectURL(image))
             }
+        } else {
+            // sendDados(questionInput.value)
         }
-        
+
         containerQuestion.style.animation = "containerInOFF 2s both";
     });
 </script>
