@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crazy Question</title>
+    <link type="image/png" sizes="96x96" rel="icon" href="meme-96.png">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +14,7 @@
     <div class="container">
         <img id="image-show" src="/meme.jpg">
         <div class="box">
-            <p id="question-show">OQ vou perguntar hoje?!</p>
+            <p id="question-show">¿Será q consigo?</p>
             <div class="button-container">
                 <button id="yes"> SIM </button>
                 <button id="no"> não </button>
@@ -24,17 +25,24 @@
     <form id="container-question">
         <fieldset>
             <legend> Qual vai ser a <s>sacan..</s> digo.. <b>pergunta*</b>? </legend>
-            <p class="container-form">
+            <!-- <p class="container-form">
                 <label for="title" class="label-form">Titulo:</label>
-                <input id="title" class="input-form" type="text" name="title" oninvalid="this.setCustomValidity('Insira um titulo')" oninput="setCustomValidity('')" required autofocus/>
-            </p>
+                <input id="title" class="input-form" type="text" name="title"/>
+            </p> -->
             <p class="container-form">
                 <label for="question" class="label-form">Pergunta:</label>
-                <input id="question" class="input-form" type="text" name="question" oninvalid="this.setCustomValidity('Insira uma pergunta')" oninput="setCustomValidity('')" required/>
+                <input id="question" class="input-form" type="text" name="question" oninvalid="this.setCustomValidity('Faça uma pergunta')" oninput="setCustomValidity('')" required autofocus/>
+            </p>
+            <p class="container-form">
+                <label >Confetes:</label>
+                <input id="checkbox-yes" type="radio" name="check"  checked required/> 
+                <label for="checkbox-yes" style="flex: 1;">SIM</label>
+                <input id="checkbox-no" type="radio" name="check"  required/> 
+                <label for="checkbox-no" style="flex: 3;">NÃO</label>
             </p>
             <p class="container-form">
                 <label for="image" class="label-form">Imagem:</label>
-                <input id="image" class="input-form" type="file" name="image" oninvalid="this.setCustomValidity('Insira uma imagem')" oninput="setCustomValidity('')" required/>
+                <input id="image" class="input-form" type="file" name="image"/>
             </p>
             <button id="send" class="send">perguntar</button>
         </fieldset>
@@ -68,62 +76,74 @@
     })
 
     buttonYES.addEventListener("click", () => {
+        const checkboxYes = document.getElementById("checkbox-yes").checked;
+        const checkboxNo = document.getElementById("checkbox-no").checked;
+        const duration = 25 * 1000;
+        const end = Date.now() + duration;
+        
         imagem.style.display = "block"
         imagem.style.animation = "slideinON 2s both"
-       
-        const duration = 30 * 1000;
-        const end = Date.now() + duration;
  
-        (function frame() {
-            // launch a few confetti from the left edge
-            confetti({
-                particleCount: 7,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 }
-            });
-            // and launch a few from the right edge
-            confetti({
-                particleCount: 7,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 }
-            });
-            
-            // keep going until we are out of time
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            } else {
+        if (checkboxYes) {
+            (function frame() {
+                // launch a few confetti from the left edge
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+
+                // and launch a few from the right edge
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+                
+                // keep going until we are out of time
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                } else {
+                    imagem.style.animation = "slideinOFF 2s both"
+                }
+            }());
+        } else {
+            if (Date.now() >= end) {
                 imagem.style.animation = "slideinOFF 2s both"
             }
-        }());
+        }
     })
 </script>
 
 <script>
     const form = document.querySelector('form');
-    const titleInput = document.getElementById('title');
+    // const titleInput = document.getElementById('title');
     const questionInput = document.getElementById('question');
     const imageInput = document.getElementById('image');
     
     const newQuestion = document.getElementById('question-show');
     const newImage = document.getElementById('image-show');
-    
+
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const image = imageInput.files[0];
-        const contentType = image.type;
-        const validContentTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-
-        document.title = titleInput.value;
+        
+        // document.title = titleInput.value;
         newQuestion.innerHTML = questionInput.value;
 
-        if (!validContentTypes.includes(contentType)) {
-            alert('O arquivo enviado não é uma imagem válida.');
-        } else {
-            newImage.src = URL.createObjectURL(image);
-        }
+        if (!!image) {
+            const contentType = image.type;
+            const validContentTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
+            if (!validContentTypes.includes(contentType)) {
+                alert('O arquivo enviado não é uma imagem válida.');
+            } else {
+                newImage.src = URL.createObjectURL(image);
+            }
+        }
+        
         containerQuestion.style.animation = "containerInOFF 2s both"
     });
 </script>
@@ -177,6 +197,7 @@
     img { 
         position: absolute;
         display: none;
+        width: 90%;
     }
 
     .button-container {
@@ -236,7 +257,8 @@
     }
 
     #container-question {
-        opacity: 1;
+        animation: containerInON 2s both;
+        margin-top: 25px;
     }
 
     @keyframes containerInON {
