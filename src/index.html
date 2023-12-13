@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crazy Question</title>
-    <link type="image/png" sizes="96x96" rel="icon" href="meme-96.png">
+    <link type="image/png" sizes="96x96" rel="icon" href="./image/meme-96.png">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="container">
-        <img id="image-show" src="/meme.jpg">
+        <img id="image-show" src="./image/meme.jpg">
         <div class="box">
             <p id="question-show"></p>
             <div class="button-container">
@@ -36,7 +36,7 @@
             </p>
             <p class="container-form">
                 <label >Confetes:</label>
-                <input id="checkbox-yes" type="radio" name="check"/> 
+                <input id="checkbox-yes" type="radio" name="check" checked/> 
                 <label for="checkbox-yes" style="flex: 1;">SIM</label>
                 <input id="checkbox-no" type="radio" name="check"/> 
                 <label for="checkbox-no" style="flex: 3;">NÃO</label>
@@ -49,5 +49,5 @@
         </fieldset>
     </form>
 </body>
-<script src="/script.js"></script>
+<script src="./script.js"></script>
 </html>

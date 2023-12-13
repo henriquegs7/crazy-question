@@ -19,7 +19,6 @@ const newImage = $.getElementById('image-show');
 function loadDados() {
     const params = new URLSearchParams(location.search);
     let isConfeteYes = $.getElementById("checkbox-yes");
-    let isConfeteNo = $.getElementById("checkbox-no");
 
     if (location.pathname === "/") {
         containerQuestion.style.animation = "containerInON 2s both";
@@ -28,14 +27,15 @@ function loadDados() {
     }
 
     newQuestion.innerHTML = params.get("question") ? params.get("question") : "¿Será q consigo?";
-    isConfeteYes.checked = params.get("isConfete") === "true" ? true : false;
-    isConfeteNo.checked = params.get("isConfete") === "true" ? false : true;
-    newImage.src = params.get("image") ? URL.createObjectURL(params.get("image")) : "/meme.jpg";
+    // isConfeteYes.checked = params.get("isConfete") === "true" ? true : false;
+    newImage.src = params.get("image") ? URL.createObjectURL(params.get("image")) : "./image/meme.jpg";
 }
 
 loadDados();
-
-function sendDados(question, image = "/meme.jpg") {
+// TODO
+// rever function pois a ideia é enviar uma pergunta personalizada usando apenas o link
+// mas nao tem como enviar imagem por url, pq estoura o limite de caracter da url
+function sendDados(question, image = "./image/meme.jpg") {
     const isConfete = $.getElementById("checkbox-yes").checked;
 
     location.href = `${location.origin + location.pathname}?question=${question}&isConfete=${isConfete}&image=${image}`;
@@ -98,6 +98,7 @@ form.addEventListener('submit', (event) => {
 
     // $.title = titleInput.value;
     newQuestion.innerHTML = questionInput.value;
+    buttonNO.style.position = "initial";
 
     if (!!image) {
         const contentType = image.type;
@@ -115,10 +116,10 @@ form.addEventListener('submit', (event) => {
             // };
             // imageReader.readAsDataURL(image);
             newImage.src = URL.createObjectURL(image);
-            sendDados(questionInput.value, URL.createObjectURL(image));
+            // sendDados(questionInput.value, URL.createObjectURL(image));
         }
     } else {
-        sendDados(questionInput.value);
+        // sendDados(questionInput.value);
     }
 
     containerQuestion.style.animation = "containerInOFF 2s both";
